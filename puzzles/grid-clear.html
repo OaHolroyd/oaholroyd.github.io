@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Word Grid</title>
+  <link rel="stylesheet" href="css/grid-clear.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="images/puzzles-152.png">
+  <meta name="theme-color" content="white"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Grid Clear">
+  <meta name="msapplication-TileImage" content="images/puzzles-144.png">
+  <meta name="msapplication-TileColor" content="#FFFFFF">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body class="fullscreen">
+  <div class="container">
+    <!-- title and navigation -->
+    <div class="container">
+      <a href="index.html">back to puzzles</a>
+    </div>
+    <h1 class="title">GRID CLEAR</h1>
+
+    <!-- score and aim -->
+    <div id="score">0</div>
+
+    <!-- board -->
+    <div id="board">
+      <canvas id="canvas" width="1000" height="1000"></canvas>
+    </div>
+
+    <!-- options list -->
+    <div>
+      <ul id="menu"></ul>
+    </div>
+  </div>
+
+  <!-- javascript sources -->
+  <script src="js/Random.js"></script>
+  <script src="js/DataBase.js"></script>
+  <script src="js/GridClear.js"></script>
+  <script src="js/grid-clear-view.js"></script>
+</body>
+
+</html>

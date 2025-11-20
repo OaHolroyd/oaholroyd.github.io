@@ -1,0 +1,210 @@
+/* ========================================================================== */
+/*   SHARED STYLES                                                            */
+/* ========================================================================== */
+/* global variables */
+:root {
+  /* sizes */
+  --board-width: 450px;
+  --pad: 10px;
+
+  /* colors */
+  --color-back: white;
+  --color-fore: black;
+  --color-min: lightgrey;
+  --color-mid: grey;
+  --color-max: darkgrey;
+
+  --color-good: green;
+  --color-tintgood: darkgreen;
+  --color-bad: red;
+  --color-tintbad: darkred;
+  --color-rep: yellow;
+}
+
+/* body */
+body {
+  font-family: sans-serif;
+  height: 100%;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+/* ensures content area fills the entire browser window */
+html,
+.fullscreen {
+  background-color: var(--color-back);
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* container to center the content in the browser window */
+.container {
+  margin: auto;
+  text-align: center;
+  width: 100%;
+}
+
+/* main title */
+.title {
+  color: var(--color-fore);
+  font-size: 3rem;
+  padding: 0;
+  margin: auto;
+}
+
+a {
+  border-radius: 15px;
+  border: 1px solid var(--color-mid);
+  padding: 2px;
+  text-decoration: none;
+  color: var(--color-mid);
+}
+
+
+/* ========================================================================== */
+/*   GAME-SPECIFIC STYLES                                                     */
+/* ========================================================================== */
+#score {
+  background-color: var(--color-back);
+  color: var(--color-fore);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#controls {
+  margin: auto;
+  background-color: var(--color-back);
+  max-width: calc(var(--board-width) - 2*var(--pad));
+  height: 30px;
+  display: flex;
+  padding: var(--pad);
+}
+
+#submit {
+  border-radius: 15px;
+  border: 1px solid var(--color-fore);
+  color: var(--color-fore);
+  background-color: lightgreen;
+  width: 50px;
+}
+
+#submit:active {
+  background-color: green;
+}
+
+#back {
+  border-radius: 15px;
+  border: 1px solid var(--color-fore);
+  color: var(--color-fore);
+  background-color: red;
+  width: 50px;
+}
+
+#back:active {
+  background-color: darkred;
+}
+
+#guess {
+  background-color: var(--color-back);
+  color: var(--color-fore);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+ul {
+  color: var(--color-fore);
+  font-size: 0.75em;
+  margin: auto;
+  padding: 0;
+  text-align: center;
+  max-width: var(--board-width);
+  aspect-ratio: 4.0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+#board {
+  margin: auto;
+  text-align: center;
+  max-width: var(--board-width);
+  aspect-ratio: 1.0;
+  position: relative;
+}
+
+#canvas {
+  display: flex;
+  position: absolute;
+  opacity: 0.2;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+}
+
+.cell {
+  display: flex;
+  position: absolute;
+  aspect-ratio: 1.0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5%;
+  border: 2px solid var(--color-fore);
+  color: var(--color-fore);
+  touch-action: manipulation;
+  font-size: 2em;
+  z-index: 9;
+}
+
+.menucell {
+  display: flex;
+  position: absolute;
+  aspect-ratio: 1.0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5%;
+  border: 2px solid var(--color-fore);
+  color: var(--color-fore);
+  touch-action: manipulation;
+  font-size: 2em;
+  z-index: 9;
+}
+
+.keyLetter {
+/*  background-color: blue;*/
+}
+
+.selected {
+  background-color: var(--color-mid);
+}
+
+.unselected {
+  background-color: var(--color-back);
+}
+
+@keyframes anim-bad {
+  100% { background-color: var(--color-back); }
+  0% { background-color: var(--color-bad); }
+}
+
+@keyframes anim-rep {
+  100% { background-color: var(--color-back); }
+  0% { background-color: var(--color-rep); }
+}
+
+@keyframes anim-good {
+  100% { background-color: var(--color-back); }
+  0% { background-color: var(--color-good); }
+}
