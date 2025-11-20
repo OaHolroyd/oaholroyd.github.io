@@ -141,6 +141,14 @@ ul {
   position: relative;
 }
 
+#menu {
+  margin: auto;
+  text-align: center;
+  max-width: var(--board-width);
+  /*aspect-ratio: 1.0;*/
+  position: relative;
+}
+
 #canvas {
   display: flex;
   position: absolute;
