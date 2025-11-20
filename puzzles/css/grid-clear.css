@@ -173,6 +173,7 @@ ul {
   touch-action: manipulation;
   font-size: 2em;
   z-index: 9;
+  font-size: 30%;
 }
 
 .menucell {
