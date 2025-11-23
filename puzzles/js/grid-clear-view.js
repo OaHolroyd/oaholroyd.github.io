@@ -2,10 +2,21 @@
 
 var gridClear = new GridClear();
 
-var drag_coord = []; // drag coordinates
-var isDragging = false;
-var pt = [];
-var filled = []; // which cells are filled
+var pieces = [];
+var numPieces = 3;
+var draggedPiece = "";
+var draggedI = -1;
+var draggedDx = 0.0;
+var draggedDy = 0.0;
+
+
+
+
+
+
+
+
+const cellSize = 9.75;
 
 // elements
 const board = document.getElementById('board');
@@ -35,8 +46,6 @@ setUpActions();
 /* ========================================================================== */
 // sets up the html
 function setUpView() {
-  const cellSize = 9;
-
   // add the cells to the grid
   for (var i = 0; i < 10; i++) {
     for (var j = 0; j < 10; j++) {
@@ -49,42 +58,40 @@ function setUpView() {
       } else {
         cell.innerHTML = 0;
       }
-      cell.id = 10*i+j;
+      cell.id = 'cell-'+(10*i+j);
       cell.innerHTML = 10*i+j;
 
       // work out the position
       let x = 10*j + 5 - cellSize/2;
-      let y = 10*i + 5 - cellSize/2;
+      let y = (10*i + 5 - cellSize/2)/1.5;
       cell.style.width = cellSize+'%';
       cell.style.left = x+'%';
       cell.style.top = y+'%';
 
       board.appendChild(cell);
       grid.push(cell);
-      filled.push(false);
     }
   }
 
-  // add the cells to the menu
-  for (var i = 0; i < 3; i++) {
-    // create a cell div for each one
-    let cell = document.createElement('div');
-    cell.classList.add('menucell');
-    cell.innerHTML = i;
+  recolorCells();
+  refreshMenu();
+}
 
-    // work out the position
-    let x = (100.0/3.0)*i + (50/3.0) - 30/2;
-    let y = 50;
-    cell.style.width = 30+'%';
-    cell.style.left = x+'%';
-    cell.style.top = y+'%';
+function recolorCells() {
+  // add the cells to the grid
+  for (var i = 0; i < 10; i++) {
+    for (var j = 0; j < 10; j++) {
+      var cell = document.getElementById('cell-'+(10*j+i));
 
-    menuBox.appendChild(cell);
-    menu.push(cell);
+      if (gridClear.grid[i][j]) {
+        cell.classList.remove("unfilled")
+        cell.classList.add("filled")
+      } else {
+        cell.classList.remove("filled")
+        cell.classList.add("unfilled")
+      }
+    }
   }
-
-
-  // resetGuess();
 }
 
 // update color scheme to match user scheme
@@ -113,189 +120,211 @@ function updateColorScheme() {
   }
 }
 
-// function ij2xy(i, j) {
-//   let y = 10*(10 * i + 5); // the leading 10 might be wrong
-//   let x = 10*(10 * j + 5); // the leading 10 might be wrong
-//   return [x, y];
-// }
+// refresh the three polyomino menu
+function refreshMenu() {
+  pieces = [];
 
-// // updates the button colors
-// function updateSelection() {
-//   // highlight letters
-//   for (var i = 0; i < 16; i++) {
-//     if (hasClicked[i]) {
-//       letterGrid[i].classList.remove('unselected');
-//       letterGrid[i].classList.add('selected');
-//     } else {
-//       letterGrid[i].classList.remove('selected');
-//       letterGrid[i].classList.add('unselected');
-//     }
-//   }
+  for (var i = 0; i < 3; i++) {
+    // generate a random omino
+    let p = new Piece();
+    pieces.push(p);
 
-//   // draw line
-//   let ctx = canvas.getContext('2d');
-//   ctx.clearRect(0, 0, 1000, 1000);
-//   if (swipe.length > 0) {
-//     ctx.lineWidth = 25;
-//     ctx.lineCap = 'round';
-//     ctx.beginPath();
-//     let xy = ij2xy(swipe[0][0], swipe[0][1]);
-//     ctx.moveTo(xy[0], xy[1]);
-//     for (let pair of swipe) {
-//       xy = ij2xy(pair[0], pair[1]);
-//       console.log(xy);
-//       ctx.lineTo(xy[0], xy[1]);
-//     }
+    // TODO: generate a random polyomino
+    let omino = document.createElement('div');
+    omino.classList.add('piece');
+    omino.id = 'menuitem-'+i;
+    omino.innerHTML = i;
 
-//     xy = ij2xy(pt[0], pt[1]);
-//     ctx.lineTo(xy[0], xy[1]);
-//     console.log(pt);
-//     console.log(xy);
-//     ctx.stroke();
-//   }
-// }
+    let scale = 0.6;
+    omino.style.width = scale*cellSize+'%';
+    omino.style.minWidth = scale*cellSize+'%';
+    omino.style.maxWidth = scale*cellSize+'%';
 
-// // resets the guess
-// function resetGuess() {
-//   for(var i = 0; i < 16; i++){
-//     hasClicked[i] = false;
-//   }
+    // work out the position
+    let x = 100*(i+0.5)/3.0 - scale*cellSize/2; // what about the margins?
+    let y = 100 * 5/6.0 - scale*cellSize/2;
+    omino.style.left = x+'%';
+    omino.style.top = y+'%';
 
-//   if (wordGrid.score < wordGrid.aim[0]) {
-//     scoreBox.innerHTML = wordGrid.score + " words, (average " + wordGrid.aim[0] + ")";
-//   } else if (wordGrid.score < wordGrid.aim[1]) {
-//     scoreBox.innerHTML = wordGrid.score + " words, (good " + wordGrid.aim[1] + ")";
-//   } else if (wordGrid.score < wordGrid.aim[2]) {
-//     scoreBox.innerHTML = wordGrid.score + " words, (excellent " + wordGrid.aim[2] + ")";
-//   } else {
-//     scoreBox.innerHTML = wordGrid.score + " words, (total " + wordGrid.aim[3] + ")";
-//   }
+    board.appendChild(omino);
+  }
 
-//   updateSelection();
-// }
+  numPieces = 3;
+}
 
-// // flash good, rep, bad status for a guess
-// function flashStatus(status) {
-//   let anim = 'anim-' + status + ' 0.5s linear 1';
-//   for (var i in hasClicked) {
-//     if (hasClicked[i]) {
-//       letterGrid[i].style.animation = anim;
-//     }
-//   }
-//   setTimeout(function () {
-//     for (var i in hasClicked) {
-//       letterGrid[i].style.animation = null;
-//     }
-//   }, 500);
-// }
+// write the score to the screen
+function updateScore() {
+  scoreBox.innerHTML = gridClear.score;
+}
 
-// // checks to see if the index [i, j] can be added to the swipe
-// function checkIndex(i, j) {
-//   if (swipe.length == 0) {
-//     return true;
-//   }
+// get the pixel-valued position relative to the top left corner of
+// the board of a touch event
+function boardxy_for_event(event) {
+  // position of cursor relative to top left corner of board
+  let x = event.changedTouches[0].clientX - board.offsetLeft;
+  let y = event.changedTouches[0].clientY - board.offsetTop;
 
-//   // have we had it already?
-//   for (let pair of swipe) {
-//     if (i == pair[0] && j == pair[1]) {
-//       return false;
-//     }
-//   }
+  return [x, y]
+}
 
-//   // does it neighbour the current one?
-//   let curr = swipe[swipe.length-1];
-//   if (Math.abs(i - curr[0]) > 1 || Math.abs(j - curr[1]) > 1) {
-//     return false;
-//   }
+// get the tile-valued position relative to the top left corner of
+// the board of a touch event
+function tilexy_for_event(event) {
+  // position of cursor relative to top left corner of board
+  let [x, y] = boardxy_for_event(event);
 
-//   return true;
-// }
+  // convert to tile units
+  x = 10.0*x/board.offsetWidth;
+  y = 10.0*y/board.offsetWidth;
 
-// // moves the drag and tries to grow the swipe
-// function dragMove(event) {
-//   // position of cursor relative to top left corner of board
-//   let x = event.changedTouches[0].clientX - board.offsetLeft;
-//   let y = event.changedTouches[0].clientY - board.offsetTop;
+  return [x, y]
+}
 
-//   // convert to tile units
-//   x = 4.0*x/board.offsetWidth;
-//   y = 4.0*y/board.offsetWidth;
+// drag the pieces around the board
+function dragStart (event) {
+  var [x, y] = tilexy_for_event(event);
 
-//   pt = [y-0.5, x-0.5];
+  draggedPiece = "";
+  draggedI = -1;
+  for (var i = 0; i < 3; i++) {
+    const p = document.getElementById('menuitem-'+i);
 
-//   // attempt to convert to tile index
-//   let tol = isSwiping ? 0.2 : 0.5; // TODO: change depending on whether we are swiping or not
-//   let i = -1;
-//   if (Math.abs(y-Math.floor(y)-0.5) < tol) {
-//     i = Math.floor(y);
-//   }
+    if (p == null) {
+      continue;
+    }
 
-//   let j = -1;
-//   if (Math.abs(x-Math.floor(x)-0.5) < tol) {
-//     j = Math.floor(x);
-//   }
+    // find position in tile units
+    var px = 10.0*p.offsetLeft/board.offsetWidth;
+    var py = 10.0*p.offsetTop/board.offsetWidth;
 
-//   // stop if we're not on a tile or are out of the board
-//   if (i < 0 || i > 3 || j < 0 || j > 3) {
-//     updateSelection();
-//     return;
-//   }
+    // check if the piece contains the cursor
+    // TODO: will need to update once pieces can have multiple cells
+    var dx = x - px;
+    var dy = y - py;
+    if (0 < dx && dx < 0.6 && 0 < dy && dy < 0.6) {
+      draggedPiece = p;
+      draggedI = i;
+      draggedDx = dx*board.offsetWidth/10.0;
+      draggedDy = dy*board.offsetWidth/10.0;
+    }
+  }
 
-//   if (swipe.length > 1) {
-//     // two or more previous tiles so can remove
-//     let prev = swipe[swipe.length-2];
-//     if (i == prev[0] && j == prev[1]) {
-//       // remove previous tile from the swipe
-//       let last = swipe.pop();
-//       hasClicked[4*last[0]+last[1]] = false;
-//     } else if (checkIndex(i, j)) {
-//       // add new tile to the swipe
-//       swipe.push([i, j]);
-//       hasClicked[4*i+j] = true;
-//       isSwiping = true;
-//     }
-//   } else if (checkIndex(i, j)) {
-//     // add new tile to the swipe
-//     swipe.push([i, j]);
-//     hasClicked[4*i+j] = true;
-//     isSwiping = true;
-//   }
-//   updateSelection();
-// }
+  // no piece under cursor
+  if (draggedPiece == "") {
+    return;
+  }
 
-// // finish the swipe and sumbit the guess
-// function dragEnd(event) {
-//   // compute the word
-//   let word = "";
-//   for (let pair of swipe) {
-//     word += wordGrid.grid[pair[0]][pair[1]];
-//   }
-//   console.log(word);
+  // grow the piece to match the board
+  draggedPiece.style.width = cellSize+'%';
+  draggedPiece.style.minWidth = cellSize+'%';
+  draggedPiece.style.maxWidth = cellSize+'%';
 
-//   isSwiping = false;
-//   swipe = [];
-//   submit(word);
-// }
+  // move the piece so it looks like it's grown around the centre
+  // update the selection shift too
+  // TODO: will need to update once pieces can have multiple cells
+  draggedPiece.style.left = (draggedPiece.offsetLeft - draggedPiece.offsetWidth*0.25)+'px';
+  draggedPiece.style.top = (draggedPiece.offsetTop - draggedPiece.offsetHeight*0.25)+'px';
+  draggedDx = draggedDx + draggedPiece.offsetWidth*0.25
+  draggedDy = draggedDy + draggedPiece.offsetHeight*0.25
+}
 
-// // submit a guess
-// function submit(word) {
-//   let status = wordGrid.checkGuess(word);
-//   flashStatus(status);
+// drag the pieces around the board
+function dragMove (event) {
+  // no piece under cursor
+  if (draggedPiece == "") {
+    return;
+  }
 
-//   if (status == 'good') {
-//     let item = document.createElement('li');
-//     item.innerHTML = word;
-//     listBox.appendChild(item);
-//     DataBase.saveGame(wordGrid);
-//   }
+  var [x, y] = boardxy_for_event(event);
 
-//   resetGuess();
-// }
+  // shift to account for where it was picked up
+  x = x - draggedDx;
+  y = y - draggedDx;
+
+  // move the piece to where it has been dragged
+  draggedPiece.style.left = x+'px';
+  draggedPiece.style.top = y+'px';
+}
+
+// handle a piece being dropped
+function dragEnd (event) {
+  if (draggedPiece == "") {
+    return;
+  }
+
+  // find position of top left corner of the dragged piece
+  let px = 10.0*draggedPiece.offsetLeft/board.offsetWidth;
+  let py = 10.0*draggedPiece.offsetTop/board.offsetWidth;
+
+  // find the distance to the nearest grid point
+  let dx = Math.abs(Math.round(px) - px);
+  let dy = Math.abs(Math.round(py) - py);
+
+  // check if it's well-aligned
+  const tol = 0.2;
+  if (dx < tol && dy < tol) {
+    let i = Math.round(px);
+    let j = Math.round(py);
+
+    // check if there are any overlaps
+    if (!gridClear.grid[i][j]) {
+      // no overlap
+
+      // fill the grid
+      let score = gridClear.insertCell(i, j);
+      if (score > 0) {
+        recolorCells();
+        updateScore();
+      }
+
+      // delete the piece once it's been placed
+      draggedPiece.remove();
+      numPieces = numPieces - 1;
+
+      // unset dragged piece
+      draggedPiece = "";
+      draggedI = -1;
+      draggedDx = 0.0;
+      draggedDy = 0.0;
+
+      // recolor the grid
+      recolorCells();
+
+      // refresh the menu if required
+      if (numPieces == 0) {
+        refreshMenu();
+      }
+
+      // check if a row has been completed
+
+      return;
+    }
+  }
+
+  // return to original size
+  const scale = 0.6;
+  draggedPiece.style.width = scale*cellSize+'%';
+  draggedPiece.style.minWidth = scale*cellSize+'%';
+  draggedPiece.style.maxWidth = scale*cellSize+'%';
+
+  // return to original place
+  let x = 100*(draggedI+0.5)/3.0 - scale*cellSize/2; // what about the margins?
+  let y = 100 * 5/6.0 - scale*cellSize/2;
+  draggedPiece.style.left = x+'%';
+  draggedPiece.style.top = y+'%';
+
+  // unset dragged piece
+  draggedPiece = "";
+  draggedI = -1;
+  draggedDx = 0.0;
+  draggedDy = 0.0;
+}
 
 // set up interactions with the game internals
 function setUpActions() {
   // TODO: be different depending on computer vs touchscreen
-  // board.addEventListener('touchmove', dragMove);
-  // board.addEventListener('touchend', dragEnd);
+  board.addEventListener('touchstart', dragStart);
+  board.addEventListener('touchmove', dragMove);
+  board.addEventListener('touchend', dragEnd);
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateColorScheme);
 }

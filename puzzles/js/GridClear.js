@@ -1,5 +1,29 @@
 /* jshint esversion: 6 */
 
+const INDICES = [0, 0, 1];
+
+const OMINOS = [
+  [
+    [true]
+  ],
+  [
+    [ true,  true,  true],
+    [ true, false, false],
+    [ true, false, false],
+  ]
+];
+
+class Piece {
+  constructor() {
+    this.id = -1;
+
+    // 4x4 grid where the cells are defined
+    var k = INDICES[Math.floor(Math.random()*INDICES.length)];
+    this.grid = OMINOS[k];
+
+  }
+}
+
 class GridClear {
   constructor() {
     // set id (for storage)
@@ -20,10 +44,6 @@ class GridClear {
     return this._score;
   }
 
-  set score(s) {
-    this._score = s;
-  }
-
   // whether the game has been completed
   get isCompleted() {
     return this._score > 0;
@@ -33,29 +53,42 @@ class GridClear {
   /* ================== */
   /*   PUBLIC METHODS   */
   /* ================== */
-  // checks a guess and adds it if it is good. Returns 'good', 'bad', or 'rep'
-  // checkGuess(word) {
-  //   let lWord = word.toLowerCase();
+  insertCell(i, j) {
+    // fill the cell
+    this.grid[i][j] = true;
 
-  //   // word is too short
-  //   if (lWord.length < 3) {
-  //     return 'bad';
-  //   }
+    // check if a row and/or column has been emptied
+    var rowFinished = true;
+    for (var ii = 0; ii < 10; ii++) {
+      if (!this.grid[ii][j]) {
+        rowFinished = false;
+        break;
+      }
+    }
+    var colFinished = true;
+    for (var jj = 0; jj < 10; jj++) {
+      if (!this.grid[i][jj]) {
+        colFinished = false;
+        break;
+      }
+    }
 
-  //   // guessed already
-  //   for(var i = 0, N = this.guessList.length; i < N; i++){
-  //     if (lWord === this.guessList[i]) {
-  //       return 'rep';
-  //     }
-  //   }
+    // empty the row and/or column
+    if (rowFinished) {
+      for (var ii = 0; ii < 10; ii++) {
+        this.grid[ii][j] = false;
+      }
+    }
+    if (colFinished) {
+      for (var jj = 0; jj < 10; jj++) {
+        this.grid[i][jj] = false;
+      }
+    }
 
-  //   // check it is a word in wordList
-  //   if (this.wordList.includes(lWord)) {
-  //     this.guessList.push(lWord);
-  //     return 'good';
-  //   }
-  //   return 'bad';
-  // }
+    let score = rowFinished + colFinished;
+    this._score += score;
+    return score;
+  }
 
 
   /* =================== */

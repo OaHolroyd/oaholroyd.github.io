@@ -134,10 +134,10 @@ ul {
 }
 
 #board {
-  margin: auto;
+  margin: auto; /* might want a larger margin?  */
   text-align: center;
   max-width: var(--board-width);
-  aspect-ratio: 1.0;
+  aspect-ratio: 1.0/1.5;
   position: relative;
 }
 
@@ -147,6 +147,7 @@ ul {
   max-width: var(--board-width);
   /*aspect-ratio: 1.0;*/
   position: relative;
+  margin: 1%;
 }
 
 #canvas {
@@ -167,8 +168,8 @@ ul {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 5%;
-  border: 2px solid var(--color-fore);
+  border-radius: 0%;
+  border: 1px solid var(--color-fore);
   color: var(--color-fore);
   touch-action: manipulation;
   font-size: 2em;
@@ -176,30 +177,37 @@ ul {
   font-size: 30%;
 }
 
-.menucell {
+.piece {
   display: flex;
   position: absolute;
   aspect-ratio: 1.0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 5%;
-  border: 2px solid var(--color-fore);
+  border-radius: 0%;
+  border: 1px solid var(--color-fore);
   color: var(--color-fore);
   touch-action: manipulation;
   font-size: 2em;
   z-index: 9;
+  font-size: 30%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .keyLetter {
 /*  background-color: blue;*/
 }
 
-.selected {
+.filled {
   background-color: var(--color-mid);
 }
 
-.unselected {
+.unfilled {
   background-color: var(--color-back);
 }
 
