@@ -1,19 +1,96 @@
 /* jshint esversion: 6 */
 
-const INDICES = [0, 1, 2];
+const INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 
 const OMINOS = [
+  // 1
   [
-    [ true],
+    [ true,],
   ],
+  // 2
   [
     [ true,  true],
+  ],
+  [
+    [ true,],
+    [ true,],
+  ],
+  // 3
+  [
+    [ true,  true,  true],
+  ],
+  [
+    [ true,],
+    [ true,],
+    [ true,],
+  ],
+  [
+    [ true,  true,],
+    [ true, false,],
+  ],
+  [
+    [ true, false,],
+    [ true,  true,],
+  ],
+  [
+    [false,  true,],
+    [ true,  true,],
+  ],
+  [
+    [ true,  true,],
+    [false,  true,],
+  ],
+  // 4
+  [
+    [ true,  true,  true,  true],
+  ],
+  [
+    [ true,],
+    [ true,],
+    [ true,],
+    [ true,],
+  ],
+  [
+    [ true,  true,],
+    [ true,  true,],
+  ],
+  // 5
+  [
+    [ true,  true,  true,  true,  true],
+  ],
+  [
+    [ true,],
+    [ true,],
+    [ true,],
+    [ true,],
+    [ true,],
   ],
   [
     [ true,  true,  true],
     [ true, false, false],
     [ true, false, false],
-  ]
+  ],
+  [
+    [ true, false, false],
+    [ true, false, false],
+    [ true,  true,  true],
+  ],
+  [
+    [false, false,  true],
+    [false, false,  true],
+    [ true,  true,  true],
+  ],
+  [
+    [ true,  true,  true],
+    [false, false,  true],
+    [false, false,  true],
+  ],
+  // 9
+  [
+    [ true,  true,  true],
+    [ true,  true,  true],
+    [ true,  true,  true],
+  ],
 ];
 
 class Piece {
@@ -38,7 +115,13 @@ class GridClear {
 
     // game setup
     this.grid = [];
-    this.#getGrid();
+    for (var i = 0; i < 10; i++) {
+      let row = [];
+      for (var j = 0; j < 10; j++) {
+        row.push(false)
+      }
+      this.grid.push(row);
+    }
 
     this._score = 0;
   }
@@ -109,9 +192,12 @@ class GridClear {
       }
     }
 
+    // place the piece
+    var score = 0;
     for (var ii = 0; ii < p.width; ii++) {
       for (var jj = 0; jj < p.height; jj++) {
         if (p.grid[jj][ii]) {
+          score = score + 1;
           this.grid[i+ii][j+jj] = true;
         }
       }
@@ -157,26 +243,17 @@ class GridClear {
       }
     }
 
+    // check for score multipliers
+    const num_cleared = rows.length + cols.length;
+    score = score + num_cleared * 10; // one point per block cleared
+    if (num_cleared >= 4) {
+      // bonus for clearing multiple rows
+      score = score + 200;
+    }
+
     // TODO: work out how to multiply up the score when clearing multiple rows/cols
-    const score = rows.length + cols.length;
     this._score = this._score + score;
 
     return score;
-  }
-
-
-  /* =================== */
-  /*   PRIVATE METHODS   */
-  /* =================== */
-  // select the grid
-  #getGrid() {
-    // fill the grid
-    for (var i = 0; i < 10; i++) {
-      let row = [];
-      for (var j = 0; j < 10; j++) {
-        row.push(false)
-      }
-      this.grid.push(row);
-    }
   }
 }
