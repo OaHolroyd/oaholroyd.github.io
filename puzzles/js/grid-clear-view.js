@@ -66,6 +66,19 @@ function setUpView() {
     }
   }
 
+  // add space for a score flash
+  let flash = document.createElement('div');
+  flash.classList.add('flash');
+  flash.style.width = 50+'%';
+  flash.style.height = 20+'%';
+  flash.style.left = 25+'%';
+  flash.style.top = 100/3.0-10+'%'; // TODO fix this
+  flash.innerHTML = "OI";
+  flash.id = "flash";
+  flash.style.opacity = 0;
+  board.appendChild(flash);
+
+
   recolorCells();
   refreshMenu();
 }
@@ -171,7 +184,28 @@ function refreshMenu() {
 }
 
 // write the score to the screen
-function updateScore() {
+function updateScore(score) {
+  if (score > 0) {
+    flash.innerHTML = '+'+score;
+    var anim = 'anim-good 0.5s linear 1';
+    if (score > 10) {
+      // row cleared
+      anim = 'anim-great 0.5s linear 1';
+    }
+    if (score > 200) {
+      // got bonus
+      anim = 'anim-amazing 0.5s linear 1';
+      flash.innerHTML = '+'+score+'!';
+    }
+
+    // flash increment
+    // let anim = 'anim-test 0.5s linear 1';
+    flash.style.animation = anim;
+    setTimeout(function () {
+      flash.style.animation = null;
+    }, 500);
+  }
+
   scoreBox.innerHTML = gridClear.score;
 }
 
@@ -309,7 +343,7 @@ function dragEnd (event) {
     let score = gridClear.insertPiece(i, j, pieces[draggedI]);
     if (score >= 0) {
       recolorCells();
-      updateScore();
+      updateScore(score);
 
       // delete the piece once it's been placed
       draggedPiece.remove();

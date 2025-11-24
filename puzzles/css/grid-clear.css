@@ -18,7 +18,7 @@
   --color-tintgood: darkgreen;
   --color-bad: red;
   --color-tintbad: darkred;
-  --color-rep: yellow;
+  --color-rep: #8B8000;
 }
 
 /* body */
@@ -167,6 +167,24 @@ ul {
   justify-content: center;
 }
 
+.flash {
+  display: flex;
+  position: absolute;
+  /*aspect-ratio: 1.0;*/
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*border-radius: 0%;*/
+  /*border: 0.5px solid var(--color-fore);*/
+  color: var(--color-fore);
+  /*touch-action: manipulation;*/
+  z-index: 10;
+  font-size: 200%;
+  /*background-color: var(--color-back);*/
+  /*-webkit-text-fill-color: transparent;*/
+  -webkit-text-stroke: 1px;
+}
+
 .cell {
   display: flex;
   position: absolute;
@@ -222,16 +240,25 @@ ul {
 }
 
 @keyframes anim-bad {
-  100% { background-color: var(--color-back); }
-  0% { background-color: var(--color-bad); }
-}
-
-@keyframes anim-rep {
-  100% { background-color: var(--color-back); }
-  0% { background-color: var(--color-rep); }
+  100% { opacity: 0.0; color: var(--color-bad); }
+  60% { opacity: 1.0; color: var(--color-bad); }
+  0% { opacity: 1.0; color: var(--color-bad); }
 }
 
 @keyframes anim-good {
-  100% { background-color: var(--color-back); }
-  0% { background-color: var(--color-good); }
+  100% { opacity: 0.0; color: var(--color-fore); }
+  60% { opacity: 1.0; color: var(--color-fore); }
+  0% { opacity: 1.0; color: var(--color-fore); }
+}
+
+@keyframes anim-great {
+  100% { opacity: 0.0; color: var(--color-good); }
+  60% { opacity: 1.0; color: var(--color-good); }
+  0% { opacity: 1.0; color: var(--color-good); }
+}
+
+@keyframes anim-amazing {
+  100% { opacity: 0.0; color: var(--color-rep); }
+  60% { opacity: 1.0; color: var(--color-rep); }
+  0% { opacity: 1.0; color: var(--color-rep); }
 }
