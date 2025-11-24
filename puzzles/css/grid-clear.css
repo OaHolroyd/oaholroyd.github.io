@@ -185,6 +185,24 @@ ul {
   -webkit-text-stroke: 1px;
 }
 
+.gameover {
+  display: flex;
+  position: absolute;
+  /*aspect-ratio: 1.0;*/
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*border-radius: 0%;*/
+  /*border: 0.5px solid var(--color-fore);*/
+  color: var(--color-fore);
+  /*touch-action: manipulation;*/
+  z-index: -1;
+  font-size: 200%;
+  background-color: var(--color-back);
+  /*-webkit-text-fill-color: transparent;*/
+  -webkit-text-stroke: 1px;
+}
+
 .cell {
   display: flex;
   position: absolute;
@@ -214,6 +232,43 @@ ul {
   font-size: 2em;
   z-index: 9;
   font-size: 30%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.top_wrapper {
+  display: grid;
+}
+
+.label {
+  justify-content: right;
+}
+
+.restart {
+  grid-column: 3 / 3;
+  grid-row: 1 / 1;
+  align-items: center;
+  justify-content: center;
+}
+
+#restart {
+  display: flex;
+  position: absolute;
+  aspect-ratio: 1.0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0%;
+  color: var(--color-fore);
+  touch-action: manipulation;
+  border: 0.5px solid var(--color-fore);
+  font-size: 2em;
+  z-index: 9;
+  font-size: 150%;
   -webkit-user-select: none;
   -moz-user-select: none;
   -o-user-select: none;

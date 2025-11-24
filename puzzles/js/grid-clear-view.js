@@ -9,25 +9,20 @@ var draggedI = -1;
 var draggedDx = 0.0;
 var draggedDy = 0.0;
 
-
-
-
-
-
-
-
 const cellSize = 9.75;
 
 // elements
 const board = document.getElementById('board');
-const canvas = document.getElementById('canvas');
 const scoreBox = document.getElementById('score');
-const menuBox = document.getElementById('menu');
+const highScoreBox = document.getElementById('highscore');
+const restart = document.getElementById('restart');
 var grid = [];
-var menu = [];
+
+var highScore = 0;
 
 setUpView();
 DataBase.fetchGame(gridClear, () => {
+  console.log(gridClear);
   // // update the screen
   // for (let i in gridClear.guessList) {
   //   let item = document.createElement('li');
@@ -46,6 +41,9 @@ setUpActions();
 /* ========================================================================== */
 // sets up the html
 function setUpView() {
+  restart.style.width = 9+'%';
+  // restart.style.height = 10+'%';
+
   // add the cells to the grid
   for (var i = 0; i < 10; i++) {
     for (var j = 0; j < 10; j++) {
@@ -62,7 +60,6 @@ function setUpView() {
       cell.style.top = y+'%';
 
       board.appendChild(cell);
-      grid.push(cell);
     }
   }
 
@@ -73,14 +70,34 @@ function setUpView() {
   flash.style.height = 20+'%';
   flash.style.left = 25+'%';
   flash.style.top = 100/3.0-10+'%'; // TODO fix this
-  flash.innerHTML = "OI";
+  flash.innerHTML = "";
   flash.id = "flash";
   flash.style.opacity = 0;
   board.appendChild(flash);
 
+  // add space for a game over menu
+  let gameover = document.createElement('div');
+  gameover.classList.add('gameover');
+  gameover.style.width = 80+'%';
+  gameover.style.height = 20+'%';
+  gameover.style.left = 10+'%';
+  gameover.style.top = 100/3.0-10+'%'; // TODO fix this
+  gameover.innerHTML = "GAME OVER";
+  gameover.id = "gameover";
+  gameover.style.opacity = 1;
+  board.appendChild(gameover);
 
   recolorCells();
   refreshMenu();
+  updateScore(0);
+}
+
+function restartGame() {
+  gridClear = new GridClear();
+  updateScore(0);
+  recolorCells();
+  refreshMenu();
+  gameover.style.zIndex = 1;
 }
 
 function recolorCells() {
@@ -185,6 +202,10 @@ function refreshMenu() {
 
 // write the score to the screen
 function updateScore(score) {
+  if (gridClear.score > highScore) {
+    highScore = gridClear.score;
+  }
+
   if (score > 0) {
     flash.innerHTML = '+'+score;
     var anim = 'anim-good 0.5s linear 1';
@@ -198,8 +219,6 @@ function updateScore(score) {
       flash.innerHTML = '+'+score+'!';
     }
 
-    // flash increment
-    // let anim = 'anim-test 0.5s linear 1';
     flash.style.animation = anim;
     setTimeout(function () {
       flash.style.animation = null;
@@ -207,6 +226,12 @@ function updateScore(score) {
   }
 
   scoreBox.innerHTML = gridClear.score;
+  highScoreBox.innerHTML = highScore;
+}
+
+function gameOver() {
+  const gameover = document.getElementById('gameover');
+  gameover.style.zIndex = 11;
 }
 
 // get the pixel-valued position relative to the top left corner of
@@ -275,7 +300,7 @@ function dragStart (event) {
         draggedPiece = p;
         draggedI = i;
         draggedDx = (sx - rect.left)/0.6;
-        draggedDy = (sy - rect.top)/0.6;
+        draggedDy = (sy - rect.top)/0.6 + board.offsetWidth * 0.2;
         break;
       }
     }
@@ -363,6 +388,25 @@ function dragEnd (event) {
         refreshMenu();
       }
 
+      // TODO: check for game over
+      var can_continue = false;
+      for (var k = 0; k < 3; k++) {
+        // does piece k still exist?
+        if (document.getElementById('piece-'+k) == null) {
+          continue;
+        }
+
+        // if it does, check if we can place it
+        if (gridClear.checkPiece(pieces[k])) {
+          can_continue = true;
+        }
+      }
+
+      if (!can_continue) {
+        gameOver();
+        return;
+      }
+
       return;
     }
   }
@@ -393,5 +437,6 @@ function setUpActions() {
   board.addEventListener('touchstart', dragStart);
   board.addEventListener('touchmove', dragMove);
   board.addEventListener('touchend', dragEnd);
+  restart.addEventListener('touchend', restartGame);
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateColorScheme);
 }

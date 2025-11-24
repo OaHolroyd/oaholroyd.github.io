@@ -26,12 +26,18 @@
     <h1 class="title">GRID CLEAR</h1>
 
     <!-- score and aim -->
-    <div id="score">0</div>
+    <div class="top_wrapper">
+      <div id="label" style="display: flex; justify-content: flex-end">score</div>
+      <div id="score">0</div>
+      <div id="label" style="display: flex; justify-content: flex-end">high score</div>
+      <div id="highscore">2</div>
+      <div class="restart">
+        <div id="restart">↺</div>
+      </div>
+    </div>
 
     <!-- board -->
     <div id="board">
-      <!-- what is this? -->
-      <canvas id="canvas" width="1000" height="1000"></canvas>
     </div>
   </div>
 

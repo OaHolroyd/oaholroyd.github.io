@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 
-const INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+// const INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+const INDICES = [19];
 
 const OMINOS = [
   // 1
@@ -91,6 +92,12 @@ const OMINOS = [
     [ true,  true,  true],
     [ true,  true,  true],
   ],
+
+  [
+    [false, false,  true, false, false,  true],
+    [false, false,  true,  true,  true,  true],
+    [ true,  true,  true, false, false,  true],
+  ],
 ];
 
 class Piece {
@@ -177,7 +184,7 @@ class GridClear {
     return score;
   }
 
-  insertPiece(i, j, p) {
+  insertPiece(i, j, p, early_exit = false) {
     // check if the piece lies within the grid
     if (i < 0 || i + p.width > 10 || j < 0 || j + p.height > 10) {
       return -1;
@@ -190,6 +197,11 @@ class GridClear {
           return -1;
         }
       }
+    }
+
+    if (early_exit) {
+      // can be placed
+      return 1;
     }
 
     // place the piece
@@ -255,5 +267,18 @@ class GridClear {
     this._score = this._score + score;
 
     return score;
+  }
+
+  // returns true if the piece can be placed anywhere on the board
+  checkPiece(p) {
+    for (var i = 0; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        if (this.insertPiece(i, j, p, true) == 1) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
