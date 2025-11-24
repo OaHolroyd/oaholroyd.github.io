@@ -95,18 +95,18 @@ class GridClear {
   }
 
   insertPiece(i, j, p) {
-    // first check if all of the cells in the piece are valid
-    var valid = true;
+    // check if the piece lies within the grid
+    if (i < 0 || i + p.width > 10 || j < 0 || j + p.height > 10) {
+      return -1;
+    }
+
+    // check if all of the cells in the piece are valid
     for (var ii = 0; ii < p.width; ii++) {
       for (var jj = 0; jj < p.height; jj++) {
         if (p.grid[jj][ii] && this.grid[i+ii][j+jj]) {
-          valid = false;
+          return -1;
         }
       }
-    }
-
-    if (!valid) {
-      return -1;
     }
 
     for (var ii = 0; ii < p.width; ii++) {

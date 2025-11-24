@@ -305,36 +305,31 @@ function dragEnd (event) {
     let i = Math.round(px);
     let j = Math.round(py);
 
-    // check if there are any overlaps
-    if (!gridClear.grid[i][j]) {
-      // no overlap
+    // add the piece to the grid
+    let score = gridClear.insertPiece(i, j, pieces[draggedI]);
+    if (score >= 0) {
+      recolorCells();
+      updateScore();
 
-      // fill the grid
-      let score = gridClear.insertPiece(i, j, pieces[draggedI]);
-      if (score >= 0) {
-        recolorCells();
-        updateScore();
+      // delete the piece once it's been placed
+      draggedPiece.remove();
+      numPieces = numPieces - 1;
 
-        // delete the piece once it's been placed
-        draggedPiece.remove();
-        numPieces = numPieces - 1;
+      // unset dragged piece
+      draggedPiece = "";
+      draggedI = -1;
+      draggedDx = 0.0;
+      draggedDy = 0.0;
 
-        // unset dragged piece
-        draggedPiece = "";
-        draggedI = -1;
-        draggedDx = 0.0;
-        draggedDy = 0.0;
+      // recolor the grid
+      recolorCells();
 
-        // recolor the grid
-        recolorCells();
-
-        // refresh the menu if required
-        if (numPieces == 0) {
-          refreshMenu();
-        }
-
-        return;
+      // refresh the menu if required
+      if (numPieces == 0) {
+        refreshMenu();
       }
+
+      return;
     }
   }
 
