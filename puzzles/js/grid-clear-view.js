@@ -124,25 +124,50 @@ function updateColorScheme() {
 function refreshMenu() {
   pieces = [];
 
-  for (var i = 0; i < 3; i++) {
+  for (var k = 0; k < 3; k++) {
     // generate a random omino
     let p = new Piece();
     pieces.push(p);
 
-    // TODO: generate a random polyomino
+    // make piece from omino
     let omino = document.createElement('div');
     omino.classList.add('piece');
-    omino.id = 'menuitem-'+i;
-    omino.innerHTML = i;
+    omino.id = 'piece-'+k;
 
+    // set the size from the width
     let scale = 0.6;
-    omino.style.width = scale*cellSize+'%';
-    omino.style.minWidth = scale*cellSize+'%';
-    omino.style.maxWidth = scale*cellSize+'%';
+    omino.style.width = p.width * scale*cellSize+'%';
+    omino.style.minWidth = p.width * scale*cellSize+'%';
+    omino.style.maxWidth = p.width * scale*cellSize+'%';
+    omino.style.aspectRatio = p.width / p.height;
+
+    // create the cells inside the omino
+    for (var i = 0; i < p.width; i++) {
+      for (var j = 0; j < p.height; j++) {
+        let cell = document.createElement('div');
+        cell.classList.add('cell');
+        if (p.grid[j][i]) {
+          cell.classList.add('filled');
+        } else {
+          cell.classList.add('unfilled');
+        }
+
+        // size
+        cell.style.width = 100/p.width+'%';
+        cell.style.minWidth = 100/p.width+'%';
+        cell.style.maxWidth = 100/p.width+'%';
+
+        // position
+        cell.style.left = i * 100/p.width+'%';
+        cell.style.top = j * 100/p.height+'%';
+
+        omino.appendChild(cell);
+      }
+    }
 
     // work out the position
-    let x = 100*(i+0.5)/3.0 - scale*cellSize/2; // what about the margins?
-    let y = 100 * 5/6.0 - scale*cellSize/2;
+    let x = 100*(k+0.5)/3.0 - scale*p.width*cellSize/2; // what about the margins?
+    let y = 100 * 5/6.0 - scale*p.height*cellSize/2;
     omino.style.left = x+'%';
     omino.style.top = y+'%';
 
@@ -187,7 +212,7 @@ function dragStart (event) {
   draggedPiece = "";
   draggedI = -1;
   for (var i = 0; i < 3; i++) {
-    const p = document.getElementById('menuitem-'+i);
+    const p = document.getElementById('piece-'+i);
 
     if (p == null) {
       continue;
@@ -214,10 +239,14 @@ function dragStart (event) {
     return;
   }
 
+  let p = pieces[draggedI];
+
   // grow the piece to match the board
-  draggedPiece.style.width = cellSize+'%';
-  draggedPiece.style.minWidth = cellSize+'%';
-  draggedPiece.style.maxWidth = cellSize+'%';
+  let scale = 1.0;
+  draggedPiece.style.width = p.width * scale*cellSize+'%';
+  draggedPiece.style.minWidth = p.width * scale*cellSize+'%';
+  draggedPiece.style.maxWidth = p.width * scale*cellSize+'%';
+  draggedPiece.style.aspectRatio = p.width / p.height;
 
   // move the piece so it looks like it's grown around the centre
   // update the selection shift too
@@ -252,6 +281,8 @@ function dragEnd (event) {
     return;
   }
 
+  let p = pieces[draggedI];
+
   // find position of top left corner of the dragged piece
   let px = 10.0*draggedPiece.offsetLeft/board.offsetWidth;
   let py = 10.0*draggedPiece.offsetTop/board.offsetWidth;
@@ -271,7 +302,7 @@ function dragEnd (event) {
       // no overlap
 
       // fill the grid
-      let score = gridClear.insertCell(i, j);
+      let score = gridClear.insertPiece(i, j, pieces[draggedI]);
       if (score > 0) {
         recolorCells();
         updateScore();
@@ -303,13 +334,14 @@ function dragEnd (event) {
 
   // return to original size
   const scale = 0.6;
-  draggedPiece.style.width = scale*cellSize+'%';
-  draggedPiece.style.minWidth = scale*cellSize+'%';
-  draggedPiece.style.maxWidth = scale*cellSize+'%';
+  draggedPiece.style.width = p.width * scale*cellSize+'%';
+  draggedPiece.style.minWidth = p.width * scale*cellSize+'%';
+  draggedPiece.style.maxWidth = p.width * scale*cellSize+'%';
+  draggedPiece.style.aspectRatio = p.width / p.height;
 
   // return to original place
-  let x = 100*(draggedI+0.5)/3.0 - scale*cellSize/2; // what about the margins?
-  let y = 100 * 5/6.0 - scale*cellSize/2;
+  let x = 100*(draggedI+0.5)/3.0 - scale*p.width*cellSize/2; // what about the margins?
+  let y = 100 * 5/6.0 - scale*p.height*cellSize/2;
   draggedPiece.style.left = x+'%';
   draggedPiece.style.top = y+'%';
 

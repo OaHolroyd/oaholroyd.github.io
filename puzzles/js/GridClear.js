@@ -1,10 +1,13 @@
 /* jshint esversion: 6 */
 
-const INDICES = [0, 0, 1];
+const INDICES = [0, 2, 2];
 
 const OMINOS = [
   [
-    [true]
+    [ true],
+  ],
+  [
+    [ true,  true],
   ],
   [
     [ true,  true,  true],
@@ -17,10 +20,11 @@ class Piece {
   constructor() {
     this.id = -1;
 
-    // 4x4 grid where the cells are defined
     var k = INDICES[Math.floor(Math.random()*INDICES.length)];
     this.grid = OMINOS[k];
 
+    this.width = this.grid[0].length;
+    this.height = this.grid.length;
   }
 }
 
@@ -87,6 +91,76 @@ class GridClear {
 
     let score = rowFinished + colFinished;
     this._score += score;
+    return score;
+  }
+
+  insertPiece(i, j, p) {
+    // first check if all of the cells in the piece are valid
+    var valid = true;
+    for (var ii = 0; ii < p.width; ii++) {
+      for (var jj = 0; jj < p.height; jj++) {
+        if (p.grid[jj][ii] && this.grid[i+ii][j+jj]) {
+          valid = false;
+        }
+      }
+    }
+
+    if (!valid) {
+      return -1;
+    }
+
+    for (var ii = 0; ii < p.width; ii++) {
+      for (var jj = 0; jj < p.height; jj++) {
+        if (p.grid[jj][ii]) {
+          this.grid[i+ii][j+jj] = true;
+        }
+      }
+    }
+
+    // check rows and cols
+    var rows = [];
+    for (var ii = 0; ii < 10; ii++) {
+      var filled = true;
+      for (var jj = 0; jj < 10; jj++) {
+        if (!this.grid[ii][jj]) {
+          filled = false;
+          break;
+        }
+      }
+      if (filled) {
+        rows.push(ii);
+      }
+    }
+    var cols = [];
+    for (var ii = 0; ii < 10; ii++) {
+      var filled = true;
+      for (var jj = 0; jj < 10; jj++) {
+        if (!this.grid[jj][ii]) {
+          filled = false;
+          break;
+        }
+      }
+      if (filled) {
+        cols.push(ii);
+      }
+    }
+
+    // remove any rows and cols that have been filled
+    for (var k = 0; k < rows.length; k++) {
+      for (var jj = 0; jj < 10; jj++) {
+        this.grid[rows[k]][jj] = false;
+      }
+    }
+    for (var k = 0; k < cols.length; k++) {
+      for (var jj = 0; jj < 10; jj++) {
+        this.grid[jj][cols[k]] = false;
+      }
+    }
+
+    // TODO: work out how to multiply up the score when clearing multiple rows/cols
+    const score = rows.length + cols.length;
+    this._score = this._score + score;
+
     return score;
   }
 
