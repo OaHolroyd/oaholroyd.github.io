@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-const INDICES = [0, 2, 2];
+const INDICES = [0, 1, 2];
 
 const OMINOS = [
   [

@@ -52,14 +52,7 @@ function setUpView() {
       // create a cell div for each one
       let cell = document.createElement('div');
       cell.classList.add('cell');
-
-      if (gridClear.grid[i][j]) {
-        cell.innerHTML = 1;
-      } else {
-        cell.innerHTML = 0;
-      }
       cell.id = 'cell-'+(10*i+j);
-      cell.innerHTML = 10*i+j;
 
       // work out the position
       let x = 10*j + 5 - cellSize/2;
@@ -149,7 +142,7 @@ function refreshMenu() {
         if (p.grid[j][i]) {
           cell.classList.add('filled');
         } else {
-          cell.classList.add('unfilled');
+          cell.classList.add('clear');
         }
 
         // size
@@ -183,11 +176,23 @@ function updateScore() {
 }
 
 // get the pixel-valued position relative to the top left corner of
+// the screen of a touch event
+function screenxy_for_event(event) {
+  // position of cursor relative to top left corner of board
+  let x = event.changedTouches[0].clientX;
+  let y = event.changedTouches[0].clientY;
+
+  return [x, y]
+}
+
+// get the pixel-valued position relative to the top left corner of
 // the board of a touch event
 function boardxy_for_event(event) {
+  let [x, y] = screenxy_for_event(event);
+
   // position of cursor relative to top left corner of board
-  let x = event.changedTouches[0].clientX - board.offsetLeft;
-  let y = event.changedTouches[0].clientY - board.offsetTop;
+  x = x - board.offsetLeft;
+  y = y - board.offsetTop;
 
   return [x, y]
 }
@@ -207,6 +212,7 @@ function tilexy_for_event(event) {
 
 // drag the pieces around the board
 function dragStart (event) {
+  var [sx, sy] = screenxy_for_event(event);
   var [x, y] = tilexy_for_event(event);
 
   draggedPiece = "";
@@ -222,15 +228,22 @@ function dragStart (event) {
     var px = 10.0*p.offsetLeft/board.offsetWidth;
     var py = 10.0*p.offsetTop/board.offsetWidth;
 
-    // check if the piece contains the cursor
-    // TODO: will need to update once pieces can have multiple cells
-    var dx = x - px;
-    var dy = y - py;
-    if (0 < dx && dx < 0.6 && 0 < dy && dy < 0.6) {
-      draggedPiece = p;
-      draggedI = i;
-      draggedDx = dx*board.offsetWidth/10.0;
-      draggedDy = dy*board.offsetWidth/10.0;
+    for (var j = 0; j < p.children.length; j++) {
+      var rect = p.children[j].getBoundingClientRect();
+
+      // can't select empty cells
+      if (p.children[j].classList.contains("clear")) {
+        continue;
+      }
+
+      if (rect.left < sx && sx < rect.right && rect.top < sy && sy < rect.bottom) {
+        rect = p.getBoundingClientRect()
+        draggedPiece = p;
+        draggedI = i;
+        draggedDx = (sx - rect.left)/0.6;
+        draggedDy = (sy - rect.top)/0.6;
+        break;
+      }
     }
   }
 
@@ -248,17 +261,12 @@ function dragStart (event) {
   draggedPiece.style.maxWidth = p.width * scale*cellSize+'%';
   draggedPiece.style.aspectRatio = p.width / p.height;
 
-  // move the piece so it looks like it's grown around the centre
-  // update the selection shift too
-  // TODO: will need to update once pieces can have multiple cells
-  draggedPiece.style.left = (draggedPiece.offsetLeft - draggedPiece.offsetWidth*0.25)+'px';
-  draggedPiece.style.top = (draggedPiece.offsetTop - draggedPiece.offsetHeight*0.25)+'px';
-  draggedDx = draggedDx + draggedPiece.offsetWidth*0.25
-  draggedDy = draggedDy + draggedPiece.offsetHeight*0.25
+  // use dragMove to update the location
+  dragMove(event);
 }
 
 // drag the pieces around the board
-function dragMove (event) {
+function dragMove(event) {
   // no piece under cursor
   if (draggedPiece == "") {
     return;
@@ -268,7 +276,7 @@ function dragMove (event) {
 
   // shift to account for where it was picked up
   x = x - draggedDx;
-  y = y - draggedDx;
+  y = y - draggedDy;
 
   // move the piece to where it has been dragged
   draggedPiece.style.left = x+'px';
@@ -303,32 +311,30 @@ function dragEnd (event) {
 
       // fill the grid
       let score = gridClear.insertPiece(i, j, pieces[draggedI]);
-      if (score > 0) {
+      if (score >= 0) {
         recolorCells();
         updateScore();
+
+        // delete the piece once it's been placed
+        draggedPiece.remove();
+        numPieces = numPieces - 1;
+
+        // unset dragged piece
+        draggedPiece = "";
+        draggedI = -1;
+        draggedDx = 0.0;
+        draggedDy = 0.0;
+
+        // recolor the grid
+        recolorCells();
+
+        // refresh the menu if required
+        if (numPieces == 0) {
+          refreshMenu();
+        }
+
+        return;
       }
-
-      // delete the piece once it's been placed
-      draggedPiece.remove();
-      numPieces = numPieces - 1;
-
-      // unset dragged piece
-      draggedPiece = "";
-      draggedI = -1;
-      draggedDx = 0.0;
-      draggedDy = 0.0;
-
-      // recolor the grid
-      recolorCells();
-
-      // refresh the menu if required
-      if (numPieces == 0) {
-        refreshMenu();
-      }
-
-      // check if a row has been completed
-
-      return;
     }
   }
 
