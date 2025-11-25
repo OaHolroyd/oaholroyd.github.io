@@ -158,7 +158,8 @@ ul {
 }
 
 #board {
-  margin: auto; /* might want a larger margin?  */
+  /*margin: auto; /* might want a larger margin?  */
+  margin: 0 2%;
   text-align: center;
   max-width: var(--board-width);
   aspect-ratio: 1.0/1.5;

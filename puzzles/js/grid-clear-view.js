@@ -20,14 +20,16 @@ var grid = [];
 
 var highScore = 0;
 
+gridClear.reset();
 setUpView();
 DataBase.fetchGame(gridClear, (game) => {
   console.log("updating highscore with " + game.highscore);
 
-  // update the highscore from the orevious game
+  // update the highscore from the previous game
   gridClear.highscore = game.highscore;
   highScore = game.highscore;
   updateScore(0);
+  recolorCells();
 });
 updateColorScheme();
 setUpActions();
@@ -365,7 +367,8 @@ function dragEnd (event) {
   let dy = Math.abs(Math.round(py) - py);
 
   // check if it's well-aligned
-  const tol = 0.2;
+  const tol = 0.3;
+  console.log([dx, dy])
   if (dx < tol && dy < tol) {
     let i = Math.round(px);
     let j = Math.round(py);
