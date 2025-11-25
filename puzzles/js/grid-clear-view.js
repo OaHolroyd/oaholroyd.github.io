@@ -144,6 +144,12 @@ function refreshMenu() {
   pieces = [];
 
   for (var k = 0; k < 3; k++) {
+    // destroy piece if it already exists
+    let o = document.getElementById('piece-'+k);
+    if (o) {
+      o.remove();
+    }
+
     // generate a random omino
     let p = new Piece();
     pieces.push(p);

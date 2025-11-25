@@ -82,6 +82,24 @@ a {
   justify-content: center;
 }
 
+#highscore {
+  background-color: var(--color-back);
+  color: var(--color-fore);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#label {
+  background-color: var(--color-back);
+  color: var(--color-fore);
+  display: flex;
+  /*flex-direction: column;*/
+  /*align-items: center;*/
+  justify-content: flex-end;
+}
+
 #controls {
   margin: auto;
   background-color: var(--color-back);
