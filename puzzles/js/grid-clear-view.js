@@ -21,16 +21,10 @@ var grid = [];
 var highScore = 0;
 
 setUpView();
-DataBase.fetchGame(gridClear, () => {
-  console.log(gridClear);
-  // // update the screen
-  // for (let i in gridClear.guessList) {
-  //   let item = document.createElement('li');
-  //   item.innerHTML = wordGrid.guessList[i].toUpperCase();
-  //   listBox.appendChild(item);
-  // }
-  // resetGuess();
-  // console.log(wordGrid.wordList);
+DataBase.fetchGame(gridClear, (game) => {
+  // update the highscore from the orevious game
+  gridClear.highscore = game.highscore;
+  highScore = game.highscore;
 });
 updateColorScheme();
 setUpActions();
@@ -93,7 +87,7 @@ function setUpView() {
 }
 
 function restartGame() {
-  gridClear = new GridClear();
+  gridClear.reset();
   updateScore(0);
   recolorCells();
   refreshMenu();
@@ -202,6 +196,8 @@ function refreshMenu() {
 
 // write the score to the screen
 function updateScore(score) {
+  DataBase.saveGame(gridClear);
+
   if (gridClear.score > highScore) {
     highScore = gridClear.score;
   }
@@ -227,6 +223,7 @@ function updateScore(score) {
 
   scoreBox.innerHTML = gridClear.score;
   highScoreBox.innerHTML = highScore;
+  gridClear.highscore = highScore;
 }
 
 function gameOver() {

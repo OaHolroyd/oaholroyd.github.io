@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 
-// const INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-const INDICES = [19];
+const INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+// const INDICES = [19];
 
 const OMINOS = [
   // 1
@@ -102,13 +102,15 @@ const OMINOS = [
 
 class Piece {
   constructor() {
-    this.id = -1;
+    this.id = 'grid-clear';
 
     var k = INDICES[Math.floor(Math.random()*INDICES.length)];
     this.grid = OMINOS[k];
 
     this.width = this.grid[0].length;
     this.height = this.grid.length;
+
+    this.highscore = 0;
   }
 }
 
@@ -280,5 +282,14 @@ class GridClear {
     }
 
     return false;
+  }
+
+  reset() {
+    for (var i = 0; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        this.grid[i][j] = false;
+      }
+    }
+    this._score = 0;
   }
 }

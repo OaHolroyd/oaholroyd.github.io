@@ -21,7 +21,7 @@ class DataBase {
     // this is called if the database cannot be opened
     openRequest.onerror = (openEvent) => {
       DataBase.#openError(openEvent);
-      oncompletion();
+      oncompletion(undefined);
       return;
     };
 
@@ -53,11 +53,11 @@ class DataBase {
             }
           }
         }
-        oncompletion();
+        oncompletion(result);
       };
 
       puzzleRequest.onerror = () => {
-        oncompletion();
+        oncompletion(undefined);
       };
     };
   }
