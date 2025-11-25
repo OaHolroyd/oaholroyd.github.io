@@ -22,9 +22,12 @@ var highScore = 0;
 
 setUpView();
 DataBase.fetchGame(gridClear, (game) => {
+  console.log("updating highscore with " + game.highscore);
+
   // update the highscore from the orevious game
   gridClear.highscore = game.highscore;
   highScore = game.highscore;
+  updateScore(0);
 });
 updateColorScheme();
 setUpActions();
@@ -83,7 +86,6 @@ function setUpView() {
 
   recolorCells();
   refreshMenu();
-  updateScore(0);
 }
 
 function restartGame() {
@@ -196,8 +198,6 @@ function refreshMenu() {
 
 // write the score to the screen
 function updateScore(score) {
-  DataBase.saveGame(gridClear);
-
   if (gridClear.score > highScore) {
     highScore = gridClear.score;
   }
@@ -224,6 +224,9 @@ function updateScore(score) {
   scoreBox.innerHTML = gridClear.score;
   highScoreBox.innerHTML = highScore;
   gridClear.highscore = highScore;
+
+  DataBase.saveGame(gridClear);
+  console.log("saving highscore with " + gridClear.highscore);
 }
 
 function gameOver() {
