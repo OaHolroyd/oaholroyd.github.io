@@ -55,10 +55,13 @@ html,
 
 /* main title */
 .title {
-  color: var(--color-fore);
+  color: rgba(85, 57, 39, 1.0);
   font-size: 3rem;
   padding: 0;
   margin: auto;
+  background-image: url('../images/wood-2.png');
+  background-size: 100% 100%;
+  margin: 2% 2%;
 }
 
 a {
@@ -66,38 +69,56 @@ a {
   border: 1px solid var(--color-mid);
   padding: 2px;
   text-decoration: none;
-  color: var(--color-mid);
+  color: rgba(85, 57, 39, 1.0);
+  background-image: url('../images/wood-2.png');
+  background-size: 100% 100%;
+  margin: 2% 2%;
 }
 
 
 /* ========================================================================== */
 /*   GAME-SPECIFIC STYLES                                                     */
 /* ========================================================================== */
+.fullscreen {
+  background-image: url('../images/wood-3.png');
+  background-size: 100% 100%;
+  margin: 2% 2%;
+}
+
+.top_wrapper {
+  background-image: url('../images/wood-2.png');
+  background-size: 100% 100%;
+  margin: 2% 2%;
+}
+
 #score {
-  background-color: var(--color-back);
-  color: var(--color-fore);
+  /*background-color: var(--color-back);*/
+  color: rgba(85, 57, 39, 1.0);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 1% 1%;
 }
 
 #highscore {
-  background-color: var(--color-back);
+  /*background-color: var(--color-back);*/
   color: var(--color-fore);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 1% 1%;
 }
 
 #label {
-  background-color: var(--color-back);
+  /*background-color: var(--color-back);*/
   color: var(--color-fore);
   display: flex;
   /*flex-direction: column;*/
   /*align-items: center;*/
   justify-content: flex-end;
+  margin: 1% 1%;
 }
 
 #controls {
@@ -231,11 +252,30 @@ ul {
   justify-content: center;
   border-radius: 0%;
   border: 0.5px solid var(--color-fore);
+  background-color: rgba(255, 0, 0, 0.0);
+  /*color: rgba(255, 0, 0, 0.0);*/
+  /*opacity: 0.2;*/
+  touch-action: manipulation;
+  font-size: 2em;
+  z-index: 9;
+  font-size: 30%;
+}
+
+.backgroundcell {
+  display: flex;
+  position: absolute;
+  aspect-ratio: 1.0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0%;
+  border: 0.5px solid var(--color-fore);
   color: var(--color-fore);
   touch-action: manipulation;
   font-size: 2em;
   z-index: 9;
   font-size: 30%;
+  background-image: url('../images/wood-0.png');
 }
 
 .piece {
@@ -284,7 +324,6 @@ ul {
   border-radius: 0%;
   color: var(--color-fore);
   touch-action: manipulation;
-  border: 0.5px solid var(--color-fore);
   font-size: 2em;
   z-index: 9;
   font-size: 150%;
@@ -294,6 +333,9 @@ ul {
   -ms-user-select: none;
   -khtml-user-select: none;
   user-select: none;
+  background-image: url('../images/wood-restart.png');
+  background-size: 100%;
+  margin: 1% 1%;
 }
 
 .keyLetter {
@@ -301,11 +343,14 @@ ul {
 }
 
 .filled {
-  background-color: var(--color-mid);
+  /*background-color: var(--color-mid);*/
+  background-image: url('../images/wood-2.png');
+  border-color: rgba(174, 119, 55, 1.0);
 }
 
 .unfilled {
-  background-color: var(--color-back);
+  /*background-color: var(--color-back);*/
+  border-color: rgba(174, 119, 55, 1.0);
 }
 
 .clear {

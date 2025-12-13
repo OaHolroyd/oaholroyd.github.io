@@ -40,6 +40,16 @@ setUpActions();
 /* ========================================================================== */
 // sets up the html
 function setUpView() {
+  // create background image
+  let background = document.createElement('div');
+  background.classList.add('backgroundcell');
+  background.id = 'background';
+  background.style.width = 100+'%';
+  background.style.left = 0+'%';
+  background.style.top = 0+'%';
+  board.appendChild(background);
+
+
   restart.style.width = 9+'%';
   // restart.style.height = 10+'%';
 
