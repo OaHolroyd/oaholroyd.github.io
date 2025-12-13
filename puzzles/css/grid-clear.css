@@ -82,7 +82,7 @@ a {
 .fullscreen {
   background-image: url('../images/wood-3.png');
   background-size: 100% 100%;
-  margin: 2% 2%;
+  /*margin: 2% 2%;*/
 }
 
 .top_wrapper {
@@ -103,7 +103,7 @@ a {
 
 #highscore {
   /*background-color: var(--color-back);*/
-  color: var(--color-fore);
+  color: rgba(85, 57, 39, 1.0);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,7 +113,7 @@ a {
 
 #label {
   /*background-color: var(--color-back);*/
-  color: var(--color-fore);
+  color: rgba(85, 57, 39, 1.0);
   display: flex;
   /*flex-direction: column;*/
   /*align-items: center;*/
