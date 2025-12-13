@@ -234,13 +234,15 @@ ul {
   justify-content: center;
   /*border-radius: 0%;*/
   /*border: 0.5px solid var(--color-fore);*/
-  color: var(--color-fore);
+  color: rgba(85, 57, 39, 1.0);
   /*touch-action: manipulation;*/
   z-index: -1;
   font-size: 200%;
-  background-color: var(--color-back);
+  /*background-color: var(--color-back);*/
   /*-webkit-text-fill-color: transparent;*/
   -webkit-text-stroke: 1px;
+  background-image: url('../images/wood-2.png');
+  background-size: 100% 100%;
 }
 
 .cell {
@@ -365,9 +367,9 @@ ul {
 }
 
 @keyframes anim-good {
-  100% { opacity: 0.0; color: var(--color-fore); }
-  60% { opacity: 1.0; color: var(--color-fore); }
-  0% { opacity: 1.0; color: var(--color-fore); }
+  100% { opacity: 0.0; color: rgba(174, 119, 55, 1.0); }
+  60% { opacity: 1.0; color: rgba(174, 119, 55, 1.0); }
+  0% { opacity: 1.0; color: rgba(174, 119, 55, 1.0); }
 }
 
 @keyframes anim-great {
