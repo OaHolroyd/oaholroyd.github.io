@@ -3,6 +3,7 @@
 const puzzles = [
   'Word Wheel',
   'Word Grid',
+  'Grid Clear',
 ];
 
 updateColorScheme();
